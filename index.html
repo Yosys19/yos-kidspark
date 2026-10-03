@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yos KidSpark Learn v6 - AI Vision Assistant</title>
+  <title>Yos KidSpark Learn v.7 - AI Vision Assistant</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -117,7 +117,7 @@
   loadingStatus.classList.remove('hidden');
 
   // Updated to gemini-2.5-flash
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
 
   try {
     const response = await fetch(endpoint, {
