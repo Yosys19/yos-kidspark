@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yos KidSpark Learn v.7 - AI Vision Assistant</title>
+  <title>Yos KidSpark Learn v.8 - AI Vision Assistant</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -103,7 +103,7 @@
       reader.readAsDataURL(file);
     });
 
-    processBtn.addEventListener('click', async () => {
+processBtn.addEventListener('click', async () => {
   const apiKey = apiKeyInput.value.trim();
   if (!apiKey) {
     alert("Mohon masukkan API Key Gemini Anda pada kolom kanan atas!");
@@ -116,52 +116,73 @@
 
   loadingStatus.classList.remove('hidden');
 
-  // Updated to gemini-2.5-flash
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
+  // List of models in order of preference (Primary -> Fallback 1 -> Fallback 2)
+  const modelsToTry = [
+    'gemini-3.8-flash',
+    'gemini-3.5-flash-lite',
+    'gemini-3.1-pro'
+  ];
 
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{
-          parts: [
-            {
-              text: "Bacalah materi pada gambar buku pelajaran ini. Buatkan:\n1. Rangkuman penjelasannya yang ramah anak dalam Bahasa Indonesia.\n2. Kunci jawaban dan pembahasan untuk soal-soal matematika yang ada pada gambar tersebut."
-            },
-            {
-              inline_data: {
-                mime_type: mimeType,
-                data: selectedImageBase64
+  let success = false;
+  let lastErrorMessage = "";
+
+  for (const modelName of modelsToTry) {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+    
+    document.getElementById('loading-text').innerText = `Sedang Menganalisis Foto (Menggunakan ${modelName})...`;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              {
+                text: "Bacalah materi pada gambar buku pelajaran ini. Buatkan:\n1. Rangkuman penjelasannya yang ramah anak dalam Bahasa Indonesia.\n2. Kunci jawaban dan pembahasan untuk soal-soal matematika yang ada pada gambar tersebut."
+              },
+              {
+                inline_data: {
+                  mime_type: mimeType,
+                  data: selectedImageBase64
+                }
               }
-            }
-          ]
-        }]
-      })
-    });
+            ]
+          }]
+        })
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.error?.message || "Gagal menghubungi Gemini API");
+      if (!response.ok) {
+        lastErrorMessage = data.error?.message || "Terjadi kesalahan API";
+        console.warn(`Model ${modelName} gagal: ${lastErrorMessage}. Mencoba model berikutnya...`);
+        continue; // Fallback to next model if this one is overloaded or fails
+      }
+
+      // Success!
+      const aiText = data.candidates[0].content.parts[0].text;
+      loadingStatus.classList.add('hidden');
+      resultsSection.classList.remove('hidden');
+
+      summaryContent.innerHTML = aiText
+        .replace(/\n\n/g, '<br><br>')
+        .replace(/\n/g, '<br>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+      resultsSection.scrollIntoView({ behavior: 'smooth' });
+      success = true;
+      break; // Exit loop on success
+
+    } catch (err) {
+      lastErrorMessage = err.message;
+      console.warn(`Error menghubungi ${modelName}:`, err);
     }
+  }
 
-    const aiText = data.candidates[0].content.parts[0].text;
-
+  if (!success) {
     loadingStatus.classList.add('hidden');
-    resultsSection.classList.remove('hidden');
-
-    summaryContent.innerHTML = aiText
-      .replace(/\n\n/g, '<br><br>')
-      .replace(/\n/g, '<br>')
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-    resultsSection.scrollIntoView({ behavior: 'smooth' });
-
-  } catch (err) {
-    console.error(err);
-    loadingStatus.classList.add('hidden');
-    alert(`Gagal memproses gambar:\n${err.message}`);
+    alert(`Gagal memproses gambar setelah mencoba beberapa model.\nError terakhir: ${lastErrorMessage}\n\nSilakan coba lagi dalam beberapa detik.`);
   }
 });
   </script>
