@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yos KidSpark Learn - AI Vision Assistant - v4</title>
+  <title>Yos KidSpark Learn v5 - AI Vision Assistant</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -34,7 +34,7 @@
 
   <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 space-y-6">
 
-    <!-- Area Unggah Foto -->
+    <!-- Upload Area -->
     <section class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm">
       <h2 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
         <span>📸</span> Unggah Foto Buku Pelajaran
@@ -65,7 +65,7 @@
       </div>
     </section>
 
-    <!-- Hasil Analisis -->
+    <!-- Results Section -->
     <section id="results-section" class="hidden space-y-6">
       <div class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm space-y-4">
         <h2 class="text-xl font-bold text-slate-800 border-b pb-3 border-slate-100 flex items-center gap-2">
@@ -116,10 +116,10 @@
 
       loadingStatus.classList.remove('hidden');
 
-      try {
-        // Menggunakan Endpoint Resmi gemini-1.5-flash
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+      // Updated model endpoint using gemini-1.5-flash-latest
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
+      try {
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
