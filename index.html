@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yos KidSpark Learn v5 - AI Vision Assistant</title>
+  <title>Yos KidSpark Learn v6 - AI Vision Assistant</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -104,66 +104,66 @@
     });
 
     processBtn.addEventListener('click', async () => {
-      const apiKey = apiKeyInput.value.trim();
-      if (!apiKey) {
-        alert("Mohon masukkan API Key Gemini Anda pada kolom kanan atas!");
-        return;
-      }
-      if (!selectedImageBase64) {
-        alert("Mohon pilih foto halaman buku pelajaran terlebih dahulu!");
-        return;
-      }
+  const apiKey = apiKeyInput.value.trim();
+  if (!apiKey) {
+    alert("Mohon masukkan API Key Gemini Anda pada kolom kanan atas!");
+    return;
+  }
+  if (!selectedImageBase64) {
+    alert("Mohon pilih foto halaman buku pelajaran terlebih dahulu!");
+    return;
+  }
 
-      loadingStatus.classList.remove('hidden');
+  loadingStatus.classList.remove('hidden');
 
-      // Updated model endpoint using gemini-1.5-flash-latest
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+  // Updated to gemini-2.5-flash
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              parts: [
-                {
-                  text: "Bacalah materi pada gambar buku pelajaran ini. Buatkan:\n1. Rangkuman penjelasannya yang ramah anak dalam Bahasa Indonesia.\n2. Kunci jawaban dan pembahasan untuk soal-soal matematika yang ada pada gambar tersebut."
-                },
-                {
-                  inline_data: {
-                    mime_type: mimeType,
-                    data: selectedImageBase64
-                  }
-                }
-              ]
-            }]
-          })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error?.message || "Gagal menghubungi Gemini API");
-        }
-
-        const aiText = data.candidates[0].content.parts[0].text;
-
-        loadingStatus.classList.add('hidden');
-        resultsSection.classList.remove('hidden');
-
-        summaryContent.innerHTML = aiText
-          .replace(/\n\n/g, '<br><br>')
-          .replace(/\n/g, '<br>')
-          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-        resultsSection.scrollIntoView({ behavior: 'smooth' });
-
-      } catch (err) {
-        console.error(err);
-        loadingStatus.classList.add('hidden');
-        alert(`Gagal memproses gambar:\n${err.message}`);
-      }
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{
+          parts: [
+            {
+              text: "Bacalah materi pada gambar buku pelajaran ini. Buatkan:\n1. Rangkuman penjelasannya yang ramah anak dalam Bahasa Indonesia.\n2. Kunci jawaban dan pembahasan untuk soal-soal matematika yang ada pada gambar tersebut."
+            },
+            {
+              inline_data: {
+                mime_type: mimeType,
+                data: selectedImageBase64
+              }
+            }
+          ]
+        }]
+      })
     });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error?.message || "Gagal menghubungi Gemini API");
+    }
+
+    const aiText = data.candidates[0].content.parts[0].text;
+
+    loadingStatus.classList.add('hidden');
+    resultsSection.classList.remove('hidden');
+
+    summaryContent.innerHTML = aiText
+      .replace(/\n\n/g, '<br><br>')
+      .replace(/\n/g, '<br>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    resultsSection.scrollIntoView({ behavior: 'smooth' });
+
+  } catch (err) {
+    console.error(err);
+    loadingStatus.classList.add('hidden');
+    alert(`Gagal memproses gambar:\n${err.message}`);
+  }
+});
   </script>
 </body>
 </html>
