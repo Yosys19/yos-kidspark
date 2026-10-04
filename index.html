@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yos KidSpark Learn v.16 - Pemindai Buku & Asisten Belajar</title>
+  <title>Y KidSpark Learn v.17 - Pemindai Buku & Asisten Belajar</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -40,7 +40,7 @@
         <span>📸</span> Unggah Halaman Buku Pelajaran
       </h2>
       <p class="text-sm text-slate-500">
-        Unggah foto materi. Sistem akan merangkum materi dan secara otomatis membuatkan kuis jika tidak ada soal latihan di foto.
+        Unggah foto materi. Sistem akan merangkum materi secara detail beserta rumus, contoh soal, dan 10 kuis pilihan ganda.
       </p>
 
       <div class="border-2 border-dashed border-emerald-300 rounded-2xl p-8 text-center bg-emerald-50/50 hover:bg-emerald-50 transition cursor-pointer relative" id="drop-zone">
@@ -60,44 +60,44 @@
           <span id="loading-text">Sedang memproses materi...</span>
         </div>
         <button id="process-btn" class="w-full sm:w-auto px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 transition transform active:scale-95 flex items-center justify-center gap-2">
-          <span>🚀</span> Pindai & Buat Pembelajaran
+          <span>🚀</span> Pindai & Buat Pembelajaran Detail
         </button>
       </div>
     </section>
 
-    <!-- 1. Topic & Summary Library Section -->
+    <!-- 1. Topic & Detailed Summary Library Section -->
     <section class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3 border-slate-100">
         <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-          <span>📚</span> Perpustakaan Rangkuman & Topik Belajar
+          <span>📚</span> Rangkuman Lengkap & Perpustakaan Materi
         </h2>
-        <span class="text-xs text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full font-bold self-start sm:self-auto">Pilih topik untuk dibaca anak</span>
+        <span class="text-xs text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full font-bold self-start sm:self-auto">Materi Buku Teks + Contoh Soal</span>
       </div>
 
       <div class="flex flex-col sm:flex-row gap-4">
         <div class="w-full sm:w-1/3 space-y-2">
           <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Daftar Topik Tersimpan</label>
-          <div id="topic-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+          <div id="topic-list" class="space-y-2 max-h-80 overflow-y-auto pr-1">
             <p class="text-xs text-slate-400 italic">Belum ada topik tersimpan.</p>
           </div>
         </div>
 
-        <div class="w-full sm:w-2/3 bg-slate-50 rounded-2xl p-4 border border-slate-200">
-          <h3 id="active-topic-title" class="text-base font-bold text-emerald-800 mb-2">Pilih topik di sebelah kiri</h3>
-          <div id="active-summary-content" class="text-xs text-slate-700 leading-relaxed space-y-2 max-h-72 overflow-y-auto pr-1">
+        <div class="w-full sm:w-2/3 bg-slate-50 rounded-2xl p-5 border border-slate-200">
+          <h3 id="active-topic-title" class="text-lg font-bold text-emerald-800 mb-3 border-b border-slate-200 pb-2">Pilih topik di sebelah kiri</h3>
+          <div id="active-summary-content" class="text-xs text-slate-700 leading-relaxed space-y-3 max-h-96 overflow-y-auto pr-2">
             Silakan unggah dokumen atau pilih salah satu topik tersimpan di perpustakaan.
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 2 & 3. Quiz Library & Interactive Exercise Area -->
+    <!-- 2 & 3. Quiz Library & Interactive 10-Question Exercise Area -->
     <section class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3 border-slate-100">
         <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-          <span>🧩</span> Latihan Soal Interaktif
+          <span>🧩</span> Latihan Soal Interaktif (10 Soal)
         </h2>
-        <span class="text-xs text-amber-600 bg-amber-50 px-3 py-1 rounded-full font-bold self-start sm:self-auto">Kuis Otomatis</span>
+        <span class="text-xs text-amber-600 bg-amber-50 px-3 py-1 rounded-full font-bold self-start sm:self-auto">Kuis 10 Soal</span>
       </div>
 
       <!-- Quiz Selection -->
@@ -116,7 +116,7 @@
         </div>
 
         <div id="question-box" class="space-y-3">
-          <p id="question-text" class="text-sm font-semibold text-slate-800"></p>
+          <p id="question-text" class="text-sm font-semibold text-slate-800 leading-relaxed"></p>
           <div id="options-container" class="space-y-2"></div>
         </div>
 
@@ -134,7 +134,7 @@
         <div class="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto text-2xl font-bold shadow-md">
           🎉
         </div>
-        <h3 class="text-lg font-bold text-emerald-900">Ringkasan Hasil Latihan</h3>
+        <h3 class="text-lg font-bold text-emerald-900">Ringkasan Hasil Latihan (10 Soal)</h3>
         <p id="quiz-score-text" class="text-2xl font-black text-emerald-600"></p>
         <p id="quiz-eval-text" class="text-xs text-slate-600 max-w-md mx-auto"></p>
         <button id="retry-quiz-btn" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow transition">
@@ -149,7 +149,7 @@
     let selectedImageBase64 = "";
     let mimeType = "image/jpeg";
     
-    // State arrays
+    // State arrays stored in LocalStorage
     let summaryLibrary = JSON.parse(localStorage.getItem('summaryLibrary')) || [];
     let quizLibrary = JSON.parse(localStorage.getItem('quizLibrary')) || [];
     
@@ -244,41 +244,36 @@
         'gemini-3.8-flash'
       ];
 
+      // System Prompt for Detailed Textbook Summary (with Formulas & Examples) + 10 Quiz Questions
       const systemPrompt = `
-SISTEM PARSER & PEMBUATAN KUIS BUKU PELAJARAN:
+SISTEM PARSER BUKU TEXTBOOK DETAIL & KUIS 10 SOAL:
 1. Anda HANYA diperbolehkan membaca dan merespons teks ber-BAHASA INDONESIA.
-2. Aturan Matematika:
+2. Aturan Format Matematika:
    - DILARANG MENGGUNAKAN format LaTeX atau simbol dolar ($).
    - DILARANG MENGGUNAKAN simbol "\\times".
    - Gunakan huruf "x" biasa untuk perkalian (contoh: 5 x 4 = 20) dan ":" untuk pembagian.
-3. Strukturkan jawaban Anda persis dalam format JSON berikut (TIDAK BOLEH ADA TEKS DI LUAR JSON):
+3. Buatkan RANGKUMAN BUKU PELAJARAN YANG SANGAT DETAIL DAN TERSTRUKTUR seperti bab buku cetak:
+   - Sertakan judul topik utama.
+   - Sertakan Penjelasan Konsep Inti.
+   - Sertakan RUMUSLENGKAP (misalnya rumus pecahan penyebut sama dan beda).
+   - Sertakan CONTOH SOAL DAN LANGKAH PEMBAHASAN LENGKAP (termasuk contoh soal cerita nyata seperti menghitung panjang senar gitar atau pembagian potongan donat jika relevan dengan gambar).
+   - Buatkan TEPAT 10 SOAL KUIS PILIHAN GANDA beserta kunci jawaban index dan penjelasannya.
+
+4. Kembalikan data HANYA dalam format JSON berikut (DILARANG MENAMBAHKAN TEKS DI LUAR JSON):
 {
   "isIndonesianText": true,
-  "topicTitle": "Judul Topik/Bab Singkat",
-  "summary": "Rangkuman materi pelajaran yang lengkap dan ringkas untuk dibaca anak.",
-  "hasTextbookExercises": false,
+  "topicTitle": "Judul Topik Utama",
+  "summary": "### 1. Konsep Utama\\n...\\n\\n### 2. Rumus Penting\\n...\\n\\n### 3. Contoh Soal & Pembahasan\\n...",
   "quiz": [
     {
-      "question": "Pertanyaan kuis pilihan ganda 1",
+      "question": "Soal 1 ...",
       "options": ["A. Opsi 1", "B. Opsi 2", "C. Opsi 3", "D. Opsi 4"],
       "answerIndex": 0,
-      "explanation": "Penjelasan mengapa jawaban ini benar."
+      "explanation": "Penjelasan langkah penyelesaian."
     },
-    {
-      "question": "Pertanyaan kuis pilihan ganda 2",
-      "options": ["A. Opsi 1", "B. Opsi 2", "C. Opsi 3", "D. Opsi 4"],
-      "answerIndex": 1,
-      "explanation": "Penjelasan mengapa jawaban ini benar."
-    },
-    {
-      "question": "Pertanyaan kuis pilihan ganda 3",
-      "options": ["A. Opsi 1", "B. Opsi 2", "C. Opsi 3", "D. Opsi 4"],
-      "answerIndex": 2,
-      "explanation": "Penjelasan mengapa jawaban ini benar."
-    }
+    ... (total harus tepat 10 pertanyaan kuis)
   ]
 }
-Catatan: Jika pada gambar sudah ada soal latihan/kuis asli, set "hasTextbookExercises": true dan buat pertanyaan kuis berdasarkan soal di gambar tersebut. Jika tidak ada, buatkan 3 kuis baru dari materi rangkuman.
 `;
 
       let berhasil = false;
@@ -288,7 +283,7 @@ Catatan: Jika pada gambar sudah ada soal latihan/kuis asli, set "hasTextbookExer
         const namaModel = daftarModel[i];
         const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${namaModel}:generateContent?key=${apiKey}`;
 
-        loadingText.innerText = `Memproses dokumen & menyusun pembelajaran (${namaModel})...`;
+        loadingText.innerText = `Membuat rangkuman detail & 10 kuis (${namaModel})...`;
 
         try {
           const response = await fetch(endpoint, {
@@ -315,9 +310,9 @@ Catatan: Jika pada gambar sudah ada soal latihan/kuis asli, set "hasTextbookExer
           let rawText = data.candidates[0].content.parts[0].text;
           rawText = bersihkanFormatMatematika(rawText);
 
-          // Extract JSON payload
+          // Extract JSON payload safely
           const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-          if (!jsonMatch) throw new Error("Format respons tidak valid.");
+          if (!jsonMatch) throw new Error("Format respons JSON tidak valid.");
 
           const parsedData = JSON.parse(jsonMatch[0]);
 
@@ -330,7 +325,7 @@ Catatan: Jika pada gambar sudah ada soal latihan/kuis asli, set "hasTextbookExer
           // 1. Save Summary to Library
           const newSummary = {
             id: Date.now(),
-            title: parsedData.topicTitle || "Topik Pelajaran Baru",
+            title: parsedData.topicTitle || "Topik Pelajaran Detail",
             summary: parsedData.summary,
             date: new Date().toLocaleDateString('id-ID')
           };
@@ -339,12 +334,12 @@ Catatan: Jika pada gambar sudah ada soal latihan/kuis asli, set "hasTextbookExer
           renderSummaryLibrary();
           selectSummaryTopic(newSummary.id);
 
-          // 2. Save Quiz to Library
+          // 2. Save 10-Question Quiz to Library
           if (parsedData.quiz && parsedData.quiz.length > 0) {
             const newQuiz = {
               id: Date.now(),
               topicId: newSummary.id,
-              title: `Kuis: ${newSummary.title}`,
+              title: `Kuis (10 Soal): ${newSummary.title}`,
               questions: parsedData.quiz
             };
             quizLibrary.unshift(newQuiz);
@@ -395,6 +390,7 @@ Catatan: Jika pada gambar sudah ada soal latihan/kuis asli, set "hasTextbookExer
 
       activeTopicTitle.innerText = item.title;
       activeSummaryContent.innerHTML = item.summary
+        .replace(/### (.*?)\n/g, '<h4 class="font-bold text-sm text-emerald-800 mt-3 mb-1">$1</h4>')
         .replace(/\n\n/g, '<br><br>')
         .replace(/\n/g, '<br>')
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -446,7 +442,7 @@ Catatan: Jika pada gambar sudah ada soal latihan/kuis asli, set "hasTextbookExer
         optionsContainer.appendChild(btn);
       });
 
-      nextQBtn.innerText = (currentQuestionIdx === activeQuiz.questions.length - 1) ? "Lihat Hasil 🏁" : "Pertanyaan Berikutnya ➔";
+      nextQBtn.innerText = (currentQuestionIdx === activeQuiz.questions.length - 1) ? "Lihat Hasil Akhir 🏁" : "Pertanyaan Berikutnya ➔";
     }
 
     function handleAnswerSelect(selectedIdx, selectedBtn) {
@@ -455,7 +451,7 @@ Catatan: Jika pada gambar sudah ada soal latihan/kuis asli, set "hasTextbookExer
 
       userAnswers[currentQuestionIdx] = isCorrect;
 
-      // Lock buttons
+      // Lock options once selected
       const buttons = optionsContainer.querySelectorAll('button');
       buttons.forEach(b => b.disabled = true);
 
@@ -487,7 +483,7 @@ Catatan: Jika pada gambar sudah ada soal latihan/kuis asli, set "hasTextbookExer
       }
     });
 
-    // 3. Exercise Summary Function
+    // 3. Exercise Summary Function (10 Questions Score)
     function showQuizSummary() {
       quizContainer.classList.add('hidden');
       quizSummary.classList.remove('hidden');
@@ -496,14 +492,14 @@ Catatan: Jika pada gambar sudah ada soal latihan/kuis asli, set "hasTextbookExer
       const correctCount = userAnswers.filter(Boolean).length;
       const score = Math.round((correctCount / total) * 100);
 
-      quizScoreText.innerText = `Nilai: ${score} / 100`;
+      quizScoreText.innerText = `Nilai: ${score} / 100 (${correctCount} dari ${total} Soal Benar)`;
 
       if (score === 100) {
-        quizEvalText.innerText = "Luar biasa! Anak telah memahami seluruh materi ini dengan sangat baik.";
-      } else if (score >= 60) {
-        quizEvalText.innerText = "Bagus sekali! Anak sudah memahami sebagian besar materi. Tetap semangat belajar!";
+        quizEvalText.innerText = "Sempurna! Anak telah menguasai seluruh materi dan rumus dengan sangat baik.";
+      } else if (score >= 70) {
+        quizEvalText.innerText = "Bagus sekali! Sebagian besar konsep dan hitungan sudah dipahami dengan baik.";
       } else {
-        quizEvalText.innerText = "Yuk baca kembali ringkasan materi di atas dan coba latihan soal ini sekali lagi!";
+        quizEvalText.innerText = "Mari pelajari lagi rumus dan contoh soal di rangkuman materi, lalu coba kuis ini sekali lagi!";
       }
     }
 
