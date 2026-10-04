@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Y KidSpark Learn v.17 - Pemindai Buku & Asisten Belajar</title>
+  <title>Y-KidSpark Learn v.18 - Pemindai Buku & Asisten Belajar</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -65,44 +65,86 @@
       </div>
     </section>
 
-    <!-- 1. Topic & Detailed Summary Library Section -->
+    <!-- 1. Topic & Detailed Summary Library Section (With Management) -->
     <section class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3 border-slate-100">
         <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-          <span>📚</span> Rangkuman Lengkap & Perpustakaan Materi
+          <span>📚</span> Rangkuman Lengkap & Manajemen Topik
         </h2>
-        <span class="text-xs text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full font-bold self-start sm:self-auto">Materi Buku Teks + Contoh Soal</span>
+        <span class="text-xs text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full font-bold self-start sm:self-auto">Materi Buku Teks + Pengelola Topik</span>
       </div>
 
       <div class="flex flex-col sm:flex-row gap-4">
+        <!-- Topic List Side -->
         <div class="w-full sm:w-1/3 space-y-2">
           <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Daftar Topik Tersimpan</label>
-          <div id="topic-list" class="space-y-2 max-h-80 overflow-y-auto pr-1">
+          <div id="topic-list" class="space-y-2 max-h-96 overflow-y-auto pr-1">
             <p class="text-xs text-slate-400 italic">Belum ada topik tersimpan.</p>
           </div>
         </div>
 
-        <div class="w-full sm:w-2/3 bg-slate-50 rounded-2xl p-5 border border-slate-200">
-          <h3 id="active-topic-title" class="text-lg font-bold text-emerald-800 mb-3 border-b border-slate-200 pb-2">Pilih topik di sebelah kiri</h3>
-          <div id="active-summary-content" class="text-xs text-slate-700 leading-relaxed space-y-3 max-h-96 overflow-y-auto pr-2">
-            Silakan unggah dokumen atau pilih salah satu topik tersimpan di perpustakaan.
+        <!-- Topic Detail & Edit Side -->
+        <div class="w-full sm:w-2/3 bg-slate-50 rounded-2xl p-5 border border-slate-200 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex justify-between items-center border-b border-slate-200 pb-2 mb-3">
+              <h3 id="active-topic-title" class="text-lg font-bold text-emerald-800">Pilih topik di sebelah kiri</h3>
+              <div id="topic-action-buttons" class="hidden flex items-center gap-1.5">
+                <button id="edit-topic-btn" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center gap-1">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                </button>
+                <button id="delete-topic-btn" class="px-2.5 py-1 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center gap-1">
+                  <i class="fa-solid fa-trash-can"></i> Hapus
+                </button>
+              </div>
+            </div>
+
+            <!-- View Mode -->
+            <div id="active-summary-view" class="text-xs text-slate-700 leading-relaxed space-y-3 max-h-80 overflow-y-auto pr-2">
+              Silakan unggah dokumen atau pilih salah satu topik tersimpan di perpustakaan.
+            </div>
+
+            <!-- Edit Mode -->
+            <div id="active-summary-edit" class="hidden space-y-3">
+              <div>
+                <label class="text-[11px] font-bold text-slate-500">Judul Topik:</label>
+                <input type="text" id="edit-topic-input" class="w-full p-2 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
+              </div>
+              <div>
+                <label class="text-[11px] font-bold text-slate-500">Isi Rangkuman (Format Markdown):</label>
+                <textarea id="edit-summary-textarea" rows="8" class="w-full p-2.5 border border-slate-300 rounded-xl text-xs font-mono text-slate-800 focus:ring-2 focus:ring-emerald-400 focus:outline-none leading-relaxed"></textarea>
+              </div>
+              <div class="flex justify-end gap-2 pt-1">
+                <button id="cancel-edit-topic-btn" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition">Batal</button>
+                <button id="save-topic-btn" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow transition">Simpan Perubahan</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 2 & 3. Quiz Library & Interactive 10-Question Exercise Area -->
+    <!-- 2 & 3. Quiz Library & Interactive 10-Question Exercise Area (With Management) -->
     <section class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3 border-slate-100">
         <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-          <span>🧩</span> Latihan Soal Interaktif (10 Soal)
+          <span>🧩</span> Latihan Soal Interaktif & Manajemen Kuis
         </h2>
-        <span class="text-xs text-amber-600 bg-amber-50 px-3 py-1 rounded-full font-bold self-start sm:self-auto">Kuis 10 Soal</span>
+        <span class="text-xs text-amber-600 bg-amber-50 px-3 py-1 rounded-full font-bold self-start sm:self-auto">Kuis 10 Soal + Pengelola Kuis</span>
       </div>
 
-      <!-- Quiz Selection -->
+      <!-- Quiz Selection & Actions -->
       <div class="space-y-2">
-        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Pilih Kuis Dari Perpustakaan Kuis</label>
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Pilih Kuis Dari Perpustakaan</label>
+          <div id="quiz-action-buttons" class="hidden flex items-center gap-1.5">
+            <button id="edit-quiz-title-btn" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center gap-1">
+              <i class="fa-solid fa-pen-to-square"></i> Edit Judul
+            </button>
+            <button id="delete-quiz-btn" class="px-2.5 py-1 bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center gap-1">
+              <i class="fa-solid fa-trash-can"></i> Hapus Kuis
+            </button>
+          </div>
+        </div>
         <select id="quiz-select" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
           <option value="">-- Pilih Kuis --</option>
         </select>
@@ -129,7 +171,7 @@
         </div>
       </div>
 
-      <!-- 3. Exercise Summary / Score Card -->
+      <!-- Exercise Summary / Score Card -->
       <div id="quiz-summary" class="hidden bg-emerald-50 p-6 rounded-2xl border border-emerald-200 text-center space-y-3">
         <div class="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto text-2xl font-bold shadow-md">
           🎉
@@ -153,6 +195,9 @@
     let summaryLibrary = JSON.parse(localStorage.getItem('summaryLibrary')) || [];
     let quizLibrary = JSON.parse(localStorage.getItem('quizLibrary')) || [];
     
+    let currentTopicId = null;
+    let currentQuizId = null;
+
     let activeQuiz = null;
     let currentQuestionIdx = 0;
     let userAnswers = [];
@@ -165,11 +210,24 @@
     const loadingText = document.getElementById('loading-text');
     const apiKeyInput = document.getElementById('api-key');
 
+    // Topic Elements
     const topicList = document.getElementById('topic-list');
     const activeTopicTitle = document.getElementById('active-topic-title');
-    const activeSummaryContent = document.getElementById('active-summary-content');
+    const topicActionButtons = document.getElementById('topic-action-buttons');
+    const editTopicBtn = document.getElementById('edit-topic-btn');
+    const deleteTopicBtn = document.getElementById('delete-topic-btn');
+    const activeSummaryView = document.getElementById('active-summary-view');
+    const activeSummaryEdit = document.getElementById('active-summary-edit');
+    const editTopicInput = document.getElementById('edit-topic-input');
+    const editSummaryTextarea = document.getElementById('edit-summary-textarea');
+    const cancelEditTopicBtn = document.getElementById('cancel-edit-topic-btn');
+    const saveTopicBtn = document.getElementById('save-topic-btn');
 
+    // Quiz Elements
     const quizSelect = document.getElementById('quiz-select');
+    const quizActionButtons = document.getElementById('quiz-action-buttons');
+    const editQuizTitleBtn = document.getElementById('edit-quiz-title-btn');
+    const deleteQuizBtn = document.getElementById('delete-quiz-btn');
     const quizContainer = document.getElementById('quiz-container');
     const quizTitle = document.getElementById('quiz-title');
     const questionTracker = document.getElementById('question-tracker');
@@ -244,7 +302,6 @@
         'gemini-3.8-flash'
       ];
 
-      // System Prompt for Detailed Textbook Summary (with Formulas & Examples) + 10 Quiz Questions
       const systemPrompt = `
 SISTEM PARSER BUKU TEXTBOOK DETAIL & KUIS 10 SOAL:
 1. Anda HANYA diperbolehkan membaca dan merespons teks ber-BAHASA INDONESIA.
@@ -255,8 +312,8 @@ SISTEM PARSER BUKU TEXTBOOK DETAIL & KUIS 10 SOAL:
 3. Buatkan RANGKUMAN BUKU PELAJARAN YANG SANGAT DETAIL DAN TERSTRUKTUR seperti bab buku cetak:
    - Sertakan judul topik utama.
    - Sertakan Penjelasan Konsep Inti.
-   - Sertakan RUMUSLENGKAP (misalnya rumus pecahan penyebut sama dan beda).
-   - Sertakan CONTOH SOAL DAN LANGKAH PEMBAHASAN LENGKAP (termasuk contoh soal cerita nyata seperti menghitung panjang senar gitar atau pembagian potongan donat jika relevan dengan gambar).
+   - Sertakan RUMUS LENGKAP (misalnya rumus pecahan penyebut sama dan beda).
+   - Sertakan CONTOH SOAL DAN LANGKAH PEMBAHASAN LENGKAP.
    - Buatkan TEPAT 10 SOAL KUIS PILIHAN GANDA beserta kunci jawaban index dan penjelasannya.
 
 4. Kembalikan data HANYA dalam format JSON berikut (DILARANG MENAMBAHKAN TEKS DI LUAR JSON):
@@ -310,7 +367,6 @@ SISTEM PARSER BUKU TEXTBOOK DETAIL & KUIS 10 SOAL:
           let rawText = data.candidates[0].content.parts[0].text;
           rawText = bersihkanFormatMatematika(rawText);
 
-          // Extract JSON payload safely
           const jsonMatch = rawText.match(/\{[\s\S]*\}/);
           if (!jsonMatch) throw new Error("Format respons JSON tidak valid.");
 
@@ -334,7 +390,7 @@ SISTEM PARSER BUKU TEXTBOOK DETAIL & KUIS 10 SOAL:
           renderSummaryLibrary();
           selectSummaryTopic(newSummary.id);
 
-          // 2. Save 10-Question Quiz to Library
+          // 2. Save Quiz to Library
           if (parsedData.quiz && parsedData.quiz.length > 0) {
             const newQuiz = {
               id: Date.now(),
@@ -345,6 +401,7 @@ SISTEM PARSER BUKU TEXTBOOK DETAIL & KUIS 10 SOAL:
             quizLibrary.unshift(newQuiz);
             localStorage.setItem('quizLibrary', JSON.stringify(quizLibrary));
             renderQuizDropdown();
+            quizSelect.value = newQuiz.id;
             loadQuiz(newQuiz.id);
           }
 
@@ -364,20 +421,25 @@ SISTEM PARSER BUKU TEXTBOOK DETAIL & KUIS 10 SOAL:
       }
     });
 
-    // --- 1. TOPIC & SUMMARY LIBRARY LOGIC ---
+    // --- 1. TOPIC & SUMMARY MANAGEMENT LOGIC ---
     function renderSummaryLibrary() {
       topicList.innerHTML = "";
       if (summaryLibrary.length === 0) {
         topicList.innerHTML = `<p class="text-xs text-slate-400 italic">Belum ada topik tersimpan.</p>`;
+        activeTopicTitle.innerText = "Pilih topik di sebelah kiri";
+        activeSummaryView.innerHTML = "Silakan unggah dokumen atau pilih salah satu topik tersimpan di perpustakaan.";
+        topicActionButtons.classList.add('hidden');
+        currentTopicId = null;
         return;
       }
 
       summaryLibrary.forEach((item) => {
         const btn = document.createElement('button');
-        btn.className = "w-full text-left p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-emerald-50 hover:border-emerald-300 transition text-xs font-semibold text-slate-700 flex justify-between items-center";
+        const isSelected = item.id === currentTopicId;
+        btn.className = `w-full text-left p-2.5 rounded-xl border ${isSelected ? 'border-emerald-500 bg-emerald-50 text-emerald-900 font-bold' : 'border-slate-200 bg-white hover:bg-emerald-50 hover:border-emerald-300 font-semibold text-slate-700'} transition text-xs flex justify-between items-center`;
         btn.innerHTML = `
           <span class="truncate">${item.title}</span>
-          <span class="text-[10px] text-slate-400 font-normal ml-1">${item.date}</span>
+          <span class="text-[10px] text-slate-400 font-normal ml-1 shrink-0">${item.date}</span>
         `;
         btn.onclick = () => selectSummaryTopic(item.id);
         topicList.appendChild(btn);
@@ -385,46 +447,144 @@ SISTEM PARSER BUKU TEXTBOOK DETAIL & KUIS 10 SOAL:
     }
 
     function selectSummaryTopic(id) {
+      currentTopicId = id;
       const item = summaryLibrary.find(s => s.id === id);
       if (!item) return;
 
+      activeSummaryEdit.classList.add('hidden');
+      activeSummaryView.classList.remove('hidden');
+
       activeTopicTitle.innerText = item.title;
-      activeSummaryContent.innerHTML = item.summary
+      topicActionButtons.classList.remove('hidden');
+
+      activeSummaryView.innerHTML = item.summary
         .replace(/### (.*?)\n/g, '<h4 class="font-bold text-sm text-emerald-800 mt-3 mb-1">$1</h4>')
         .replace(/\n\n/g, '<br><br>')
         .replace(/\n/g, '<br>')
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+      renderSummaryLibrary();
     }
 
-    // --- 2 & 3. QUIZ LIBRARY & EXERCISE LOGIC ---
+    // Edit Topic Logic
+    editTopicBtn.addEventListener('click', () => {
+      const item = summaryLibrary.find(s => s.id === currentTopicId);
+      if (!item) return;
+
+      editTopicInput.value = item.title;
+      editSummaryTextarea.value = item.summary;
+
+      activeSummaryView.classList.add('hidden');
+      activeSummaryEdit.classList.remove('hidden');
+    });
+
+    cancelEditTopicBtn.addEventListener('click', () => {
+      activeSummaryEdit.classList.add('hidden');
+      activeSummaryView.classList.remove('hidden');
+    });
+
+    saveTopicBtn.addEventListener('click', () => {
+      const newTitle = editTopicInput.value.trim();
+      const newSummary = editSummaryTextarea.value.trim();
+
+      if (!newTitle || !newSummary) {
+        alert("Judul dan isi rangkuman tidak boleh kosong!");
+        return;
+      }
+
+      const item = summaryLibrary.find(s => s.id === currentTopicId);
+      if (item) {
+        item.title = newTitle;
+        item.summary = newSummary;
+        localStorage.setItem('summaryLibrary', JSON.stringify(summaryLibrary));
+        selectSummaryTopic(currentTopicId);
+      }
+    });
+
+    // Delete Topic Logic
+    deleteTopicBtn.addEventListener('click', () => {
+      if (!currentTopicId) return;
+
+      const confirmDelete = confirm("Apakah Anda yakin ingin menghapus topik ini? Kuis terkait tidak akan terhapus otomatis kecuali Anda menghapusnya di bagian kuis.");
+      if (!confirmDelete) return;
+
+      summaryLibrary = summaryLibrary.filter(s => s.id !== currentTopicId);
+      localStorage.setItem('summaryLibrary', JSON.stringify(summaryLibrary));
+
+      currentTopicId = null;
+      renderSummaryLibrary();
+    });
+
+    // --- 2 & 3. QUIZ MANAGEMENT & EXERCISE LOGIC ---
     function renderQuizDropdown() {
       quizSelect.innerHTML = `<option value="">-- Pilih Kuis --</option>`;
       quizLibrary.forEach((q) => {
         const opt = document.createElement('option');
         opt.value = q.id;
         opt.textContent = q.title;
+        if (q.id === currentQuizId) opt.selected = true;
         quizSelect.appendChild(opt);
       });
     }
 
     quizSelect.addEventListener('change', (e) => {
       const selectedId = Number(e.target.value);
-      if (selectedId) loadQuiz(selectedId);
+      if (selectedId) {
+        loadQuiz(selectedId);
+      } else {
+        currentQuizId = null;
+        quizActionButtons.classList.add('hidden');
+        quizContainer.classList.add('hidden');
+        quizSummary.classList.add('hidden');
+      }
     });
 
     function loadQuiz(quizId) {
+      currentQuizId = quizId;
       activeQuiz = quizLibrary.find(q => q.id === quizId);
       if (!activeQuiz) return;
 
       currentQuestionIdx = 0;
       userAnswers = [];
 
+      quizActionButtons.classList.remove('hidden');
       quizSummary.classList.add('hidden');
       quizContainer.classList.remove('hidden');
       quizTitle.innerText = activeQuiz.title;
 
       renderQuestion();
     }
+
+    // Edit Quiz Title Logic
+    editQuizTitleBtn.addEventListener('click', () => {
+      if (!currentQuizId || !activeQuiz) return;
+
+      const newTitle = prompt("Edit Judul Kuis:", activeQuiz.title);
+      if (newTitle !== null && newTitle.trim() !== "") {
+        activeQuiz.title = newTitle.trim();
+        localStorage.setItem('quizLibrary', JSON.stringify(quizLibrary));
+        renderQuizDropdown();
+        quizTitle.innerText = activeQuiz.title;
+      }
+    });
+
+    // Delete Quiz Logic
+    deleteQuizBtn.addEventListener('click', () => {
+      if (!currentQuizId) return;
+
+      const confirmDelete = confirm("Apakah Anda yakin ingin menghapus kuis ini?");
+      if (!confirmDelete) return;
+
+      quizLibrary = quizLibrary.filter(q => q.id !== currentQuizId);
+      localStorage.setItem('quizLibrary', JSON.stringify(quizLibrary));
+
+      currentQuizId = null;
+      activeQuiz = null;
+      quizActionButtons.classList.add('hidden');
+      quizContainer.classList.add('hidden');
+      quizSummary.classList.add('hidden');
+      renderQuizDropdown();
+    });
 
     function renderQuestion() {
       quizFeedback.classList.add('hidden');
@@ -451,7 +611,6 @@ SISTEM PARSER BUKU TEXTBOOK DETAIL & KUIS 10 SOAL:
 
       userAnswers[currentQuestionIdx] = isCorrect;
 
-      // Lock options once selected
       const buttons = optionsContainer.querySelectorAll('button');
       buttons.forEach(b => b.disabled = true);
 
@@ -483,7 +642,6 @@ SISTEM PARSER BUKU TEXTBOOK DETAIL & KUIS 10 SOAL:
       }
     });
 
-    // 3. Exercise Summary Function (10 Questions Score)
     function showQuizSummary() {
       quizContainer.classList.add('hidden');
       quizSummary.classList.remove('hidden');
