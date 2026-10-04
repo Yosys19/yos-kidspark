@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KidSpark Learn v.13 - Pemindai Buku Bahasa Indonesia</title>
+  <title>Yos KidSpark Learn v.14 - Pemindai Buku Bahasa Indonesia</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -104,13 +104,12 @@
       reader.readAsDataURL(file);
     });
 
-    // Menerjemahkan pesan error API ke Bahasa Indonesia yang jelas
     function terjemahkanPesanError(pesanError) {
       if (!pesanError) return "Terjadi kesalahan jaringan atau API.";
       
       const pesan = pesanError.toLowerCase();
       if (pesan.includes("high demand") || pesan.includes("spikes in demand")) {
-        return "Server AI sedang penuh (lonjakan pengguna). Silakan coba klik tombol lagi dalam beberapa detik.";
+        return "Server AI sedang sibuk (lonjakan pengguna). Silakan coba lagi beberapa saat.";
       }
       if (pesan.includes("api key not valid") || pesan.includes("api_key_invalid") || pesan.includes("unauthorized")) {
         return "Kunci API (API Key) Gemini tidak valid. Silakan periksa kembali Kunci API Anda.";
@@ -119,6 +118,18 @@
         return "Kuota harian Kunci API Anda telah habis. Silakan coba lagi nanti.";
       }
       return `Detail Kendala: ${pesanError}`;
+    }
+
+    // Fungsi pembersih format teks dari simbol LaTeX ($ dan \times)
+    function bersihkanFormatMatematika(teks) {
+      if (!teks) return "";
+      return teks
+        .replace(/\\\times/g, "x")       // Mengubah \times menjadi x
+        .replace(/\\cdot/g, "x")        // Mengubah \cdot menjadi x
+        .replace(/\\div/g, ":")         // Mengubah \div menjadi :
+        .replace(/\$/g, "")              // Menghapus simbol $
+        .replace(/\\\(/g, "")            // Menghapus \(         .replace(/\\\)/g, "")            // Menghapus \)
+        .replace(/\\\[/g, "")            // Menghapus \[         .replace(/\\\]/g, "");           // Menghapus \]
     }
 
     processBtn.addEventListener('click', async () => {
@@ -134,21 +145,25 @@
 
       loadingStatus.classList.remove('hidden');
 
-      // Model aktif resmi untuk REST API v1beta
       const daftarModel = [
-        'gemini-3.8-flash',
-        'gemini-3.5-flash-lite'
+        'gemini-2.5-flash',
+        'gemini-2.5-flash-lite'
       ];
 
-      // Instruksi Parser Engine: Hanya Membaca & Merespons Bahasa Indonesia
+      // Instruksi Parser Engine Khusus Bahasa Indonesia + Bebas Format LaTeX
       const instruksiParserIndonesia = `
 ATURAN UTAMA PARSER:
 1. Anda HANYA diperbolehkan membaca, menganalisis, dan mengekstrak teks yang ditulis dalam BAHASA INDONESIA pada gambar.
-2. Jika dokumen atau gambar berisi bahasa asing (seperti Bahasa Inggris atau bahasa lainnya) tanpa adanya teks Bahasa Indonesia, berikan respons singkat: "Maaf, gambar tidak berisi teks atau materi dalam Bahasa Indonesia."
-3. Jika gambar berisi teks Bahasa Indonesia:
+2. Jika dokumen atau gambar berisi bahasa asing tanpa adanya teks Bahasa Indonesia, berikan respons singkat: "Maaf, gambar tidak berisi teks atau materi dalam Bahasa Indonesia."
+3. Aturan Penulisan Simbol Matematika:
+   - DILARANG MENGGUNAKAN format LaTeX atau simbol dolar ($).
+   - DILARANG MENGGUNAKAN simbol "\\times".
+   - Gunakan huruf "x" biasa untuk operasi perkalian (contoh: 5 x 4 = 20).
+   - Gunakan titik dua ":" untuk pembagian (contoh: 20 : 4 = 5).
+4. Jika gambar berisi teks Bahasa Indonesia:
    a. Buatkan rangkuman materi penjelasan secara terstruktur, rapi, dan mudah dipahami anak sekolah.
    b. Jika terdapat soal latihan/matematika pada gambar, tuliskan kunci jawaban beserta langkah pembahasannya secara lengkap.
-4. Seluruh output respons WAJIB 100% menggunakan Bahasa Indonesia.
+5. Seluruh output respons WAJIB 100% menggunakan Bahasa Indonesia.
 `;
 
       let berhasil = false;
@@ -189,7 +204,11 @@ ATURAN UTAMA PARSER:
           }
 
           // Pemrosesan Berhasil
-          const teksHasil = data.candidates[0].content.parts[0].text;
+          let teksHasil = data.candidates[0].content.parts[0].text;
+          
+          // Bersihkan teks dari simbol-simbol LaTeX secara komprehensif
+          teksHasil = bersihkanFormatMatematika(teksHasil);
+
           loadingStatus.classList.add('hidden');
           resultsSection.classList.remove('hidden');
 
