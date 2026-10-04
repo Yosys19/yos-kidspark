@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yos KidSpark Learn v.8 - AI Vision Assistant</title>
+  <title>Yos KidSpark Learn v.9 - Asisten AI Belajar Bahasa Indonesia</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -14,7 +14,7 @@
 </head>
 <body class="min-h-screen text-slate-800 flex flex-col">
 
-  <!-- Header & API Key Input -->
+  <!-- Header & Input API Key -->
   <header class="bg-white border-b border-emerald-100 sticky top-0 z-50">
     <div class="max-w-5xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
       <div class="flex items-center space-x-3">
@@ -23,24 +23,24 @@
         </div>
         <div>
           <h1 class="text-xl font-bold text-emerald-700 leading-tight">KidSpark Learn</h1>
-          <p class="text-xs text-emerald-500 font-semibold">AI Vision Study Assistant</p>
+          <p class="text-xs text-emerald-500 font-semibold">Pemindai Buku Bahasa Indonesia</p>
         </div>
       </div>
       <div class="flex items-center gap-2 w-full sm:w-auto">
-        <input type="password" id="api-key" placeholder="Masukkan API Key Gemini Anda..." class="px-3 py-1.5 border border-slate-300 rounded-xl text-xs w-full sm:w-64 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
+        <input type="password" id="api-key" placeholder="Masukkan Kunci API Gemini..." class="px-3 py-1.5 border border-slate-300 rounded-xl text-xs w-full sm:w-64 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
       </div>
     </div>
   </header>
 
   <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 space-y-6">
 
-    <!-- Upload Area -->
+    <!-- Area Unggah Gambar -->
     <section class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm">
       <h2 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
-        <span>📸</span> Unggah Foto Buku Pelajaran
+        <span>📸</span> Unggah Foto Buku Pelajaran (Bahasa Indonesia)
       </h2>
       <p class="text-sm text-slate-500 mb-4">
-        Unggah foto halaman buku cetak atau soal latihan. Gemini Vision akan membaca materi matematika/teks secara langsung!
+        Unggah foto halaman buku cetak atau soal latihan ber-Bahasa Indonesia. Sistem akan memproses dan memfilter hanya materi dalam Bahasa Indonesia.
       </p>
 
       <div class="border-2 border-dashed border-emerald-300 rounded-2xl p-8 text-center bg-emerald-50/50 hover:bg-emerald-50 transition cursor-pointer relative" id="drop-zone">
@@ -57,19 +57,19 @@
       <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div id="loading-status" class="hidden text-sm text-emerald-700 font-semibold flex items-center gap-2">
           <i class="fa-solid fa-spinner animate-spin text-emerald-500"></i>
-          <span id="loading-text">Sedang Menganalisis Foto dengan AI Vision...</span>
+          <span id="loading-text">Sedang memproses teks Bahasa Indonesia...</span>
         </div>
         <button id="process-btn" class="w-full sm:w-auto px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 transition transform active:scale-95 flex items-center justify-center gap-2">
-          <span>🚀</span> Buat Rangkuman & Latihan
+          <span>🚀</span> Memproses Teks Bahasa Indonesia
         </button>
       </div>
     </section>
 
-    <!-- Results Section -->
+    <!-- Hasil Analisis -->
     <section id="results-section" class="hidden space-y-6">
       <div class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm space-y-4">
         <h2 class="text-xl font-bold text-slate-800 border-b pb-3 border-slate-100 flex items-center gap-2">
-          <span>💡</span> Hasil Analisis & Rangkuman Materi
+          <span>💡</span> Hasil Analisis Teks Bahasa Indonesia
         </h2>
         <div id="summary-content" class="prose max-w-none text-slate-700 text-sm leading-relaxed space-y-3"></div>
       </div>
@@ -85,6 +85,7 @@
     const fileLabel = document.getElementById('file-label');
     const processBtn = document.getElementById('process-btn');
     const loadingStatus = document.getElementById('loading-status');
+    const loadingText = document.getElementById('loading-text');
     const apiKeyInput = document.getElementById('api-key');
     const resultsSection = document.getElementById('results-section');
     const summaryContent = document.getElementById('summary-content');
@@ -93,7 +94,7 @@
       const file = e.target.files[0];
       if (!file) return;
 
-      fileLabel.innerText = `File Terpilih: ${file.name}`;
+      fileLabel.innerText = `Berkas Terpilih: ${file.name}`;
       mimeType = file.type || "image/jpeg";
 
       const reader = new FileReader();
@@ -103,88 +104,115 @@
       reader.readAsDataURL(file);
     });
 
-processBtn.addEventListener('click', async () => {
-  const apiKey = apiKeyInput.value.trim();
-  if (!apiKey) {
-    alert("Mohon masukkan API Key Gemini Anda pada kolom kanan atas!");
-    return;
-  }
-  if (!selectedImageBase64) {
-    alert("Mohon pilih foto halaman buku pelajaran terlebih dahulu!");
-    return;
-  }
+    function terjemahkanError(pesanError) {
+      if (!pesanError) return "Terjadi kesalahan yang tidak diketahui.";
+      
+      if (pesanError.includes("high demand") || pesanError.includes("spikes in demand")) {
+        return "Server AI sedang mengalami lonjakan pengguna. Mencoba model cadangan...";
+      }
+      if (pesanError.includes("API key not valid") || pesanError.includes("API_KEY_INVALID")) {
+        return "Kunci API (API Key) tidak valid. Silakan periksa kembali.";
+      }
+      if (pesanError.includes("is not found") || pesanError.includes("not supported")) {
+        return "Model AI tidak tersedia atau tidak mendukung fitur ini.";
+      }
+      if (pesanError.includes("Quota exceeded") || pesanError.includes("RESOURCE_EXHAUSTED")) {
+        return "Kuota API telah habis. Silakan coba lagi nanti.";
+      }
+      return pesanError;
+    }
 
-  loadingStatus.classList.remove('hidden');
-
-  // List of models in order of preference (Primary -> Fallback 1 -> Fallback 2)
-  const modelsToTry = [
-    'gemini-3.8-flash',
-    'gemini-3.5-flash-lite',
-    'gemini-3.1-pro'
-  ];
-
-  let success = false;
-  let lastErrorMessage = "";
-
-  for (const modelName of modelsToTry) {
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-    
-    document.getElementById('loading-text').innerText = `Sedang Menganalisis Foto (Menggunakan ${modelName})...`;
-
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            parts: [
-              {
-                text: "Bacalah materi pada gambar buku pelajaran ini. Buatkan:\n1. Rangkuman penjelasannya yang ramah anak dalam Bahasa Indonesia.\n2. Kunci jawaban dan pembahasan untuk soal-soal matematika yang ada pada gambar tersebut."
-              },
-              {
-                inline_data: {
-                  mime_type: mimeType,
-                  data: selectedImageBase64
-                }
-              }
-            ]
-          }]
-        })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        lastErrorMessage = data.error?.message || "Terjadi kesalahan API";
-        console.warn(`Model ${modelName} gagal: ${lastErrorMessage}. Mencoba model berikutnya...`);
-        continue; // Fallback to next model if this one is overloaded or fails
+    processBtn.addEventListener('click', async () => {
+      const apiKey = apiKeyInput.value.trim();
+      if (!apiKey) {
+        alert("Mohon masukkan Kunci API Gemini Anda!");
+        return;
+      }
+      if (!selectedImageBase64) {
+        alert("Mohon unggah foto halaman buku terlebih dahulu!");
+        return;
       }
 
-      // Success!
-      const aiText = data.candidates[0].content.parts[0].text;
-      loadingStatus.classList.add('hidden');
-      resultsSection.classList.remove('hidden');
+      loadingStatus.classList.remove('hidden');
 
-      summaryContent.innerHTML = aiText
-        .replace(/\n\n/g, '<br><br>')
-        .replace(/\n/g, '<br>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      const daftarModel = [
+        'gemini-2.5-flash',
+        'gemini-2.5-flash-lite',
+        'gemini-1.5-flash'
+      ];
 
-      resultsSection.scrollIntoView({ behavior: 'smooth' });
-      success = true;
-      break; // Exit loop on success
+      // System Prompt khusus untuk membatasi parsing HANYA pada Bahasa Indonesia
+      const instruksiKhususIndonesia = `
+ATURAN UTAMA PARSER:
+1. Anda HANYA diperbolehkan membaca, menganalisis, dan mengekstrak teks yang ditulis dalam BAHASA INDONESIA pada gambar.
+2. Jika dokumen atau gambar berisi bahasa asing (seperti Bahasa Inggris atau bahasa lainnya) tanpa Teks Bahasa Indonesia, berikan respons: "Maaf, gambar tidak berisi teks atau materi dalam Bahasa Indonesia."
+3. Jika gambar berisi teks Bahasa Indonesia:
+   a. Buatkan rangkuman penjelasannya secara terstruktur dan mudah dipahami.
+   b. Jika terdapat soal latihan/matematika, tuliskan kunci jawaban dan langkah pembahasannya secara detail.
+4. Seluruh output respons WAJIB 100% menggunakan Bahasa Indonesia.
+`;
 
-    } catch (err) {
-      lastErrorMessage = err.message;
-      console.warn(`Error menghubungi ${modelName}:`, err);
-    }
-  }
+      let berhasil = false;
+      let errorTerakhir = "";
 
-  if (!success) {
-    loadingStatus.classList.add('hidden');
-    alert(`Gagal memproses gambar setelah mencoba beberapa model.\nError terakhir: ${lastErrorMessage}\n\nSilakan coba lagi dalam beberapa detik.`);
-  }
-});
+      for (let i = 0; i < daftarModel.length; i++) {
+        const namaModel = daftarModel[i];
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${namaModel}:generateContent?key=${apiKey}`;
+
+        loadingText.innerText = `Sedang memindai teks Bahasa Indonesia (Model ${i + 1})...`;
+
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{
+                parts: [
+                  { text: instruksiKhususIndonesia },
+                  {
+                    inline_data: {
+                      mime_type: mimeType,
+                      data: selectedImageBase64
+                    }
+                  }
+                ]
+              }]
+            })
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            const pesanMentah = data.error?.message || "Gagal menghubungkan ke API.";
+            errorTerakhir = terjemahkanError(pesanMentah);
+            console.warn(`Model ${namaModel} gagal: ${pesanMentah}`);
+            continue;
+          }
+
+          const teksHasil = data.candidates[0].content.parts[0].text;
+          loadingStatus.classList.add('hidden');
+          resultsSection.classList.remove('hidden');
+
+          summaryContent.innerHTML = teksHasil
+            .replace(/\n\n/g, '<br><br>')
+            .replace(/\n/g, '<br>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+          resultsSection.scrollIntoView({ behavior: 'smooth' });
+          berhasil = true;
+          break;
+
+        } catch (err) {
+          errorTerakhir = terjemahkanError(err.message);
+          console.warn(`Error pada model ${namaModel}:`, err);
+        }
+      }
+
+      if (!berhasil) {
+        loadingStatus.classList.add('hidden');
+        alert(`Gagal memproses gambar:\n${errorTerakhir}`);
+      }
+    });
   </script>
 </body>
 </html>
