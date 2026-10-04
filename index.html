@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yos KidSpark Learn v.11 - Asisten AI Belajar Bahasa Indonesia</title>
+  <title>KidSpark Learn v.12 - Pemindai Buku Bahasa Indonesia</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -14,7 +14,7 @@
 </head>
 <body class="min-h-screen text-slate-800 flex flex-col">
 
-  <!-- Header & Input API Key -->
+  <!-- Header & Input Kunci API -->
   <header class="bg-white border-b border-emerald-100 sticky top-0 z-50">
     <div class="max-w-5xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
       <div class="flex items-center space-x-3">
@@ -37,10 +37,10 @@
     <!-- Area Unggah Gambar -->
     <section class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm">
       <h2 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
-        <span>📸</span> Unggah Foto Buku Pelajaran (Bahasa Indonesia)
+        <span>📸</span> Unggah Foto Buku Pelajaran (Khusus Bahasa Indonesia)
       </h2>
       <p class="text-sm text-slate-500 mb-4">
-        Unggah foto halaman buku cetak atau soal latihan ber-Bahasa Indonesia. Sistem akan memproses dan memfilter hanya materi dalam Bahasa Indonesia.
+        Unggah foto halaman buku cetak atau soal latihan. Sistem parser khusus ini hanya memproses dan membaca materi dalam Bahasa Indonesia.
       </p>
 
       <div class="border-2 border-dashed border-emerald-300 rounded-2xl p-8 text-center bg-emerald-50/50 hover:bg-emerald-50 transition cursor-pointer relative" id="drop-zone">
@@ -69,7 +69,7 @@
     <section id="results-section" class="hidden space-y-6">
       <div class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm space-y-4">
         <h2 class="text-xl font-bold text-slate-800 border-b pb-3 border-slate-100 flex items-center gap-2">
-          <span>💡</span> Hasil Analisis Teks Bahasa Indonesia
+          <span>💡</span> Hasil Pemrosesan Teks Bahasa Indonesia
         </h2>
         <div id="summary-content" class="prose max-w-none text-slate-700 text-sm leading-relaxed space-y-3"></div>
       </div>
@@ -104,51 +104,50 @@
       reader.readAsDataURL(file);
     });
 
-    function terjemahkanError(pesanError) {
-      if (!pesanError) return "Terjadi kesalahan yang tidak diketahui.";
+    // Menerjemahkan pesan error API ke Bahasa Indonesia yang jelas
+    function terjemahkanPesanError(pesanError) {
+      if (!pesanError) return "Terjadi kesalahan jaringan atau API.";
       
-      if (pesanError.includes("high demand") || pesanError.includes("spikes in demand")) {
-        return "Server AI sedang mengalami lonjakan pengguna. Mencoba model cadangan...";
+      const pesan = pesanError.toLowerCase();
+      if (pesan.includes("high demand") || pesan.includes("spikes in demand")) {
+        return "Server AI sedang penuh (lonjakan pengguna). Silakan coba klik tombol lagi dalam beberapa detik.";
       }
-      if (pesanError.includes("API key not valid") || pesanError.includes("API_KEY_INVALID")) {
-        return "Kunci API (API Key) tidak valid. Silakan periksa kembali.";
+      if (pesan.includes("api key not valid") || pesan.includes("api_key_invalid") || pesan.includes("unauthorized")) {
+        return "Kunci API (API Key) Gemini tidak valid. Silakan periksa kembali Kunci API Anda.";
       }
-      if (pesanError.includes("is not found") || pesanError.includes("not supported")) {
-        return "Model AI tidak tersedia atau tidak mendukung fitur ini.";
+      if (pesan.includes("quota exceeded") || pesan.includes("resource_exhausted") || pesan.includes("429")) {
+        return "Kuota harian Kunci API Anda telah habis. Silakan coba lagi nanti.";
       }
-      if (pesanError.includes("Quota exceeded") || pesanError.includes("RESOURCE_EXHAUSTED")) {
-        return "Kuota API telah habis. Silakan coba lagi nanti.";
-      }
-      return pesanError;
+      return `Detail Kendala: ${pesanError}`;
     }
 
     processBtn.addEventListener('click', async () => {
       const apiKey = apiKeyInput.value.trim();
       if (!apiKey) {
-        alert("Mohon masukkan Kunci API Gemini Anda!");
+        alert("Mohon masukkan Kunci API Gemini Anda di kolom kanan atas!");
         return;
       }
       if (!selectedImageBase64) {
-        alert("Mohon unggah foto halaman buku terlebih dahulu!");
+        alert("Mohon pilih atau unggah foto halaman buku pelajaran terlebih dahulu!");
         return;
       }
 
       loadingStatus.classList.remove('hidden');
 
+      // Model aktif resmi untuk REST API v1beta
       const daftarModel = [
         'gemini-2.0-flash',
-        'gemini-1.5-flash-8b',
-        'gemini-1.5-pro'
+        'gemini-2.0-flash-lite-preview-02-05'
       ];
 
-      // System Prompt khusus untuk membatasi parsing HANYA pada Bahasa Indonesia
-      const instruksiKhususIndonesia = `
+      // Instruksi Parser Engine: Hanya Membaca & Merespons Bahasa Indonesia
+      const instruksiParserIndonesia = `
 ATURAN UTAMA PARSER:
 1. Anda HANYA diperbolehkan membaca, menganalisis, dan mengekstrak teks yang ditulis dalam BAHASA INDONESIA pada gambar.
-2. Jika dokumen atau gambar berisi bahasa asing (seperti Bahasa Inggris atau bahasa lainnya) tanpa Teks Bahasa Indonesia, berikan respons: "Maaf, gambar tidak berisi teks atau materi dalam Bahasa Indonesia."
+2. Jika dokumen atau gambar berisi bahasa asing (seperti Bahasa Inggris atau bahasa lainnya) tanpa adanya teks Bahasa Indonesia, berikan respons singkat: "Maaf, gambar tidak berisi teks atau materi dalam Bahasa Indonesia."
 3. Jika gambar berisi teks Bahasa Indonesia:
-   a. Buatkan rangkuman penjelasannya secara terstruktur dan mudah dipahami.
-   b. Jika terdapat soal latihan/matematika, tuliskan kunci jawaban dan langkah pembahasannya secara detail.
+   a. Buatkan rangkuman materi penjelasan secara terstruktur, rapi, dan mudah dipahami anak sekolah.
+   b. Jika terdapat soal latihan/matematika pada gambar, tuliskan kunci jawaban beserta langkah pembahasannya secara lengkap.
 4. Seluruh output respons WAJIB 100% menggunakan Bahasa Indonesia.
 `;
 
@@ -159,7 +158,7 @@ ATURAN UTAMA PARSER:
         const namaModel = daftarModel[i];
         const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${namaModel}:generateContent?key=${apiKey}`;
 
-        loadingText.innerText = `Sedang memindai teks Bahasa Indonesia (Model ${i + 1})...`;
+        loadingText.innerText = `Memproses gambar dengan parser Bahasa Indonesia...`;
 
         try {
           const response = await fetch(endpoint, {
@@ -168,7 +167,7 @@ ATURAN UTAMA PARSER:
             body: JSON.stringify({
               contents: [{
                 parts: [
-                  { text: instruksiKhususIndonesia },
+                  { text: instruksiParserIndonesia },
                   {
                     inline_data: {
                       mime_type: mimeType,
@@ -183,12 +182,13 @@ ATURAN UTAMA PARSER:
           const data = await response.json();
 
           if (!response.ok) {
-            const pesanMentah = data.error?.message || "Gagal menghubungkan ke API.";
-            errorTerakhir = terjemahkanError(pesanMentah);
-            console.warn(`Model ${namaModel} gagal: ${pesanMentah}`);
+            const pesanMentah = data.error?.message || "Respons server tidak sesuai.";
+            errorTerakhir = terjemahkanPesanError(pesanMentah);
+            console.warn(`Gagal pada model ${namaModel}:`, pesanMentah);
             continue;
           }
 
+          // Pemrosesan Berhasil
           const teksHasil = data.candidates[0].content.parts[0].text;
           loadingStatus.classList.add('hidden');
           resultsSection.classList.remove('hidden');
@@ -203,8 +203,8 @@ ATURAN UTAMA PARSER:
           break;
 
         } catch (err) {
-          errorTerakhir = terjemahkanError(err.message);
-          console.warn(`Error pada model ${namaModel}:`, err);
+          errorTerakhir = terjemahkanPesanError(err.message);
+          console.warn(`Kesalahan pada model ${namaModel}:`, err);
         }
       }
 
