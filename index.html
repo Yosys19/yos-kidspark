@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yos KidSpark Learn v.15 - Pemindai Buku Bahasa Indonesia</title>
+  <title>Yos KidSpark Learn v.16 - Pemindai Buku & Asisten Belajar</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -14,7 +14,7 @@
 </head>
 <body class="min-h-screen text-slate-800 flex flex-col">
 
-  <!-- Header & Input Kunci API -->
+  <!-- Header -->
   <header class="bg-white border-b border-emerald-100 sticky top-0 z-50">
     <div class="max-w-5xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
       <div class="flex items-center space-x-3">
@@ -23,7 +23,7 @@
         </div>
         <div>
           <h1 class="text-xl font-bold text-emerald-700 leading-tight">KidSpark Learn</h1>
-          <p class="text-xs text-emerald-500 font-semibold">Pemindai Buku Bahasa Indonesia</p>
+          <p class="text-xs text-emerald-500 font-semibold">Pemindai Buku & Kuis Belajar Interaktif</p>
         </div>
       </div>
       <div class="flex items-center gap-2 w-full sm:w-auto">
@@ -32,15 +32,15 @@
     </div>
   </header>
 
-  <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 space-y-6">
+  <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 space-y-8">
 
-    <!-- Area Unggah Gambar -->
-    <section class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm">
-      <h2 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
-        <span>📸</span> Unggah Foto Buku Pelajaran (Khusus Bahasa Indonesia)
+    <!-- Upload Section -->
+    <section class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm space-y-4">
+      <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+        <span>📸</span> Unggah Halaman Buku Pelajaran
       </h2>
-      <p class="text-sm text-slate-500 mb-4">
-        Unggah foto halaman buku cetak atau soal latihan. Sistem parser khusus ini hanya memproses dan membaca materi dalam Bahasa Indonesia.
+      <p class="text-sm text-slate-500">
+        Unggah foto materi. Sistem akan merangkum materi dan secara otomatis membuatkan kuis jika tidak ada soal latihan di foto.
       </p>
 
       <div class="border-2 border-dashed border-emerald-300 rounded-2xl p-8 text-center bg-emerald-50/50 hover:bg-emerald-50 transition cursor-pointer relative" id="drop-zone">
@@ -50,28 +50,96 @@
             <i class="fa-solid fa-cloud-arrow-up"></i>
           </div>
           <p class="text-sm font-bold text-emerald-800" id="file-label">Klik atau Tarik Foto ke Sini</p>
-          <p class="text-xs text-emerald-600">Format yang didukung: JPG, PNG, WEBP</p>
+          <p class="text-xs text-emerald-600">Format: JPG, PNG, WEBP</p>
         </div>
       </div>
 
-      <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
         <div id="loading-status" class="hidden text-sm text-emerald-700 font-semibold flex items-center gap-2">
           <i class="fa-solid fa-spinner animate-spin text-emerald-500"></i>
-          <span id="loading-text">Sedang memproses teks Bahasa Indonesia...</span>
+          <span id="loading-text">Sedang memproses materi...</span>
         </div>
         <button id="process-btn" class="w-full sm:w-auto px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 transition transform active:scale-95 flex items-center justify-center gap-2">
-          <span>🚀</span> Memproses Teks Bahasa Indonesia
+          <span>🚀</span> Pindai & Buat Pembelajaran
         </button>
       </div>
     </section>
 
-    <!-- Hasil Analisis -->
-    <section id="results-section" class="hidden space-y-6">
-      <div class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm space-y-4">
-        <h2 class="text-xl font-bold text-slate-800 border-b pb-3 border-slate-100 flex items-center gap-2">
-          <span>💡</span> Hasil Pemrosesan Teks Bahasa Indonesia
+    <!-- 1. Topic & Summary Library Section -->
+    <section class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3 border-slate-100">
+        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+          <span>📚</span> Perpustakaan Rangkuman & Topik Belajar
         </h2>
-        <div id="summary-content" class="prose max-w-none text-slate-700 text-sm leading-relaxed space-y-3"></div>
+        <span class="text-xs text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full font-bold self-start sm:self-auto">Pilih topik untuk dibaca anak</span>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4">
+        <div class="w-full sm:w-1/3 space-y-2">
+          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Daftar Topik Tersimpan</label>
+          <div id="topic-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+            <p class="text-xs text-slate-400 italic">Belum ada topik tersimpan.</p>
+          </div>
+        </div>
+
+        <div class="w-full sm:w-2/3 bg-slate-50 rounded-2xl p-4 border border-slate-200">
+          <h3 id="active-topic-title" class="text-base font-bold text-emerald-800 mb-2">Pilih topik di sebelah kiri</h3>
+          <div id="active-summary-content" class="text-xs text-slate-700 leading-relaxed space-y-2 max-h-72 overflow-y-auto pr-1">
+            Silakan unggah dokumen atau pilih salah satu topik tersimpan di perpustakaan.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 & 3. Quiz Library & Interactive Exercise Area -->
+    <section class="bg-white rounded-3xl p-6 border-2 border-emerald-100 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3 border-slate-100">
+        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+          <span>🧩</span> Latihan Soal Interaktif
+        </h2>
+        <span class="text-xs text-amber-600 bg-amber-50 px-3 py-1 rounded-full font-bold self-start sm:self-auto">Kuis Otomatis</span>
+      </div>
+
+      <!-- Quiz Selection -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Pilih Kuis Dari Perpustakaan Kuis</label>
+        <select id="quiz-select" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
+          <option value="">-- Pilih Kuis --</option>
+        </select>
+      </div>
+
+      <!-- Quiz Player -->
+      <div id="quiz-container" class="hidden space-y-4 bg-amber-50/40 p-5 rounded-2xl border border-amber-200">
+        <div class="flex justify-between items-center border-b border-amber-200 pb-2">
+          <h3 id="quiz-title" class="font-bold text-amber-900 text-sm"></h3>
+          <span id="question-tracker" class="text-xs font-bold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-full"></span>
+        </div>
+
+        <div id="question-box" class="space-y-3">
+          <p id="question-text" class="text-sm font-semibold text-slate-800"></p>
+          <div id="options-container" class="space-y-2"></div>
+        </div>
+
+        <div id="quiz-feedback" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
+
+        <div class="flex justify-end pt-2">
+          <button id="next-q-btn" class="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs shadow-md transition">
+            Pertanyaan Berikutnya ➔
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. Exercise Summary / Score Card -->
+      <div id="quiz-summary" class="hidden bg-emerald-50 p-6 rounded-2xl border border-emerald-200 text-center space-y-3">
+        <div class="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto text-2xl font-bold shadow-md">
+          🎉
+        </div>
+        <h3 class="text-lg font-bold text-emerald-900">Ringkasan Hasil Latihan</h3>
+        <p id="quiz-score-text" class="text-2xl font-black text-emerald-600"></p>
+        <p id="quiz-eval-text" class="text-xs text-slate-600 max-w-md mx-auto"></p>
+        <button id="retry-quiz-btn" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow transition">
+          Coba Lagi
+        </button>
       </div>
     </section>
 
@@ -80,15 +148,43 @@
   <script>
     let selectedImageBase64 = "";
     let mimeType = "image/jpeg";
+    
+    // State arrays
+    let summaryLibrary = JSON.parse(localStorage.getItem('summaryLibrary')) || [];
+    let quizLibrary = JSON.parse(localStorage.getItem('quizLibrary')) || [];
+    
+    let activeQuiz = null;
+    let currentQuestionIdx = 0;
+    let userAnswers = [];
 
+    // DOM Elements
     const imageInput = document.getElementById('image-input');
     const fileLabel = document.getElementById('file-label');
     const processBtn = document.getElementById('process-btn');
     const loadingStatus = document.getElementById('loading-status');
     const loadingText = document.getElementById('loading-text');
     const apiKeyInput = document.getElementById('api-key');
-    const resultsSection = document.getElementById('results-section');
-    const summaryContent = document.getElementById('summary-content');
+
+    const topicList = document.getElementById('topic-list');
+    const activeTopicTitle = document.getElementById('active-topic-title');
+    const activeSummaryContent = document.getElementById('active-summary-content');
+
+    const quizSelect = document.getElementById('quiz-select');
+    const quizContainer = document.getElementById('quiz-container');
+    const quizTitle = document.getElementById('quiz-title');
+    const questionTracker = document.getElementById('question-tracker');
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const quizFeedback = document.getElementById('quiz-feedback');
+    const nextQBtn = document.getElementById('next-q-btn');
+    const quizSummary = document.getElementById('quiz-summary');
+    const quizScoreText = document.getElementById('quiz-score-text');
+    const quizEvalText = document.getElementById('quiz-eval-text');
+    const retryQuizBtn = document.getElementById('retry-quiz-btn');
+
+    // Init App State
+    renderSummaryLibrary();
+    renderQuizDropdown();
 
     imageInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -106,30 +202,28 @@
 
     function terjemahkanPesanError(pesanError) {
       if (!pesanError) return "Terjadi kesalahan jaringan atau API.";
-      
       const pesan = pesanError.toLowerCase();
       if (pesan.includes("high demand") || pesan.includes("spikes in demand")) {
-        return "Server AI sedang sibuk (lonjakan pengguna). Silakan coba lagi beberapa saat.";
+        return "Server AI sedang sibuk. Silakan coba lagi beberapa saat.";
       }
-      if (pesan.includes("api key not valid") || pesan.includes("api_key_invalid") || pesan.includes("unauthorized")) {
-        return "Kunci API (API Key) Gemini tidak valid. Silakan periksa kembali Kunci API Anda.";
+      if (pesan.includes("api key not valid") || pesan.includes("api_key_invalid")) {
+        return "Kunci API Gemini tidak valid. Silakan periksa kembali.";
       }
       if (pesan.includes("quota exceeded") || pesan.includes("resource_exhausted") || pesan.includes("429")) {
-        return "Kuota harian Kunci API Anda telah habis. Silakan coba lagi nanti.";
+        return "Kuota harian Kunci API Anda telah habis.";
       }
       return `Detail Kendala: ${pesanError}`;
     }
 
-    // Fungsi pembersih format teks dari simbol LaTeX ($ dan \times)
     function bersihkanFormatMatematika(teks) {
       if (!teks) return "";
       return teks
-        .replace(/\\\times/g, "x")       // Mengubah \times menjadi x
-        .replace(/\\cdot/g, "x")        // Mengubah \cdot menjadi x
-        .replace(/\\div/g, ":")         // Mengubah \div menjadi :
-        .replace(/\$/g, "")              // Menghapus simbol $
-        .replace(/\\\(/g, "")            // Menghapus \(         .replace(/\\\)/g, "")            // Menghapus \)
-        .replace(/\\\[/g, "")            // Menghapus \[         .replace(/\\\]/g, "");           // Menghapus \]
+        .replace(/\\\times/g, "x")
+        .replace(/\\cdot/g, "x")
+        .replace(/\\div/g, ":")
+        .replace(/\$/g, "")
+        .replace(/\\\(/g, "")         .replace(/\\\)/g, "")
+        .replace(/\\\[/g, "")         .replace(/\\\]/g, "");
     }
 
     processBtn.addEventListener('click', async () => {
@@ -145,26 +239,46 @@
 
       loadingStatus.classList.remove('hidden');
 
-      // Model aktif resmi dari Google Gemini API
       const daftarModel = [
         'gemini-3.5-flash-lite',
         'gemini-3.8-flash'
       ];
 
-      // Instruksi Parser Engine Khusus Bahasa Indonesia + Bebas Format LaTeX
-      const instruksiParserIndonesia = `
-ATURAN UTAMA PARSER:
-1. Anda HANYA diperbolehkan membaca, menganalisis, dan mengekstrak teks yang ditulis dalam BAHASA INDONESIA pada gambar.
-2. Jika dokumen atau gambar berisi bahasa asing tanpa adanya teks Bahasa Indonesia, berikan respons singkat: "Maaf, gambar tidak berisi teks atau materi dalam Bahasa Indonesia."
-3. Aturan Penulisan Simbol Matematika:
+      const systemPrompt = `
+SISTEM PARSER & PEMBUATAN KUIS BUKU PELAJARAN:
+1. Anda HANYA diperbolehkan membaca dan merespons teks ber-BAHASA INDONESIA.
+2. Aturan Matematika:
    - DILARANG MENGGUNAKAN format LaTeX atau simbol dolar ($).
    - DILARANG MENGGUNAKAN simbol "\\times".
-   - Gunakan huruf "x" biasa untuk operasi perkalian (contoh: 5 x 4 = 20).
-   - Gunakan titik dua ":" untuk pembagian (contoh: 20 : 4 = 5).
-4. Jika gambar berisi teks Bahasa Indonesia:
-   a. Buatkan rangkuman materi penjelasan secara terstruktur, rapi, dan mudah dipahami anak sekolah.
-   b. Jika terdapat soal latihan/matematika pada gambar, tuliskan kunci jawaban beserta langkah pembahasannya secara lengkap.
-5. Seluruh output respons WAJIB 100% menggunakan Bahasa Indonesia.
+   - Gunakan huruf "x" biasa untuk perkalian (contoh: 5 x 4 = 20) dan ":" untuk pembagian.
+3. Strukturkan jawaban Anda persis dalam format JSON berikut (TIDAK BOLEH ADA TEKS DI LUAR JSON):
+{
+  "isIndonesianText": true,
+  "topicTitle": "Judul Topik/Bab Singkat",
+  "summary": "Rangkuman materi pelajaran yang lengkap dan ringkas untuk dibaca anak.",
+  "hasTextbookExercises": false,
+  "quiz": [
+    {
+      "question": "Pertanyaan kuis pilihan ganda 1",
+      "options": ["A. Opsi 1", "B. Opsi 2", "C. Opsi 3", "D. Opsi 4"],
+      "answerIndex": 0,
+      "explanation": "Penjelasan mengapa jawaban ini benar."
+    },
+    {
+      "question": "Pertanyaan kuis pilihan ganda 2",
+      "options": ["A. Opsi 1", "B. Opsi 2", "C. Opsi 3", "D. Opsi 4"],
+      "answerIndex": 1,
+      "explanation": "Penjelasan mengapa jawaban ini benar."
+    },
+    {
+      "question": "Pertanyaan kuis pilihan ganda 3",
+      "options": ["A. Opsi 1", "B. Opsi 2", "C. Opsi 3", "D. Opsi 4"],
+      "answerIndex": 2,
+      "explanation": "Penjelasan mengapa jawaban ini benar."
+    }
+  ]
+}
+Catatan: Jika pada gambar sudah ada soal latihan/kuis asli, set "hasTextbookExercises": true dan buat pertanyaan kuis berdasarkan soal di gambar tersebut. Jika tidak ada, buatkan 3 kuis baru dari materi rangkuman.
 `;
 
       let berhasil = false;
@@ -174,7 +288,7 @@ ATURAN UTAMA PARSER:
         const namaModel = daftarModel[i];
         const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${namaModel}:generateContent?key=${apiKey}`;
 
-        loadingText.innerText = `Memproses gambar dengan parser Bahasa Indonesia (${namaModel})...`;
+        loadingText.innerText = `Memproses dokumen & menyusun pembelajaran (${namaModel})...`;
 
         try {
           const response = await fetch(endpoint, {
@@ -183,13 +297,8 @@ ATURAN UTAMA PARSER:
             body: JSON.stringify({
               contents: [{
                 parts: [
-                  { text: instruksiParserIndonesia },
-                  {
-                    inline_data: {
-                      mime_type: mimeType,
-                      data: selectedImageBase64
-                    }
-                  }
+                  { text: systemPrompt },
+                  { inline_data: { mime_type: mimeType, data: selectedImageBase64 } }
                 ]
               }]
             })
@@ -198,33 +307,59 @@ ATURAN UTAMA PARSER:
           const data = await response.json();
 
           if (!response.ok) {
-            const pesanMentah = data.error?.message || "Respons server tidak sesuai.";
+            const pesanMentah = data.error?.message || "Respons server gagal.";
             errorTerakhir = terjemahkanPesanError(pesanMentah);
-            console.warn(`Gagal pada model ${namaModel}:`, pesanMentah);
             continue;
           }
 
-          // Pemrosesan Berhasil
-          let teksHasil = data.candidates[0].content.parts[0].text;
-          
-          // Bersihkan teks dari simbol-simbol LaTeX
-          teksHasil = bersihkanFormatMatematika(teksHasil);
+          let rawText = data.candidates[0].content.parts[0].text;
+          rawText = bersihkanFormatMatematika(rawText);
+
+          // Extract JSON payload
+          const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+          if (!jsonMatch) throw new Error("Format respons tidak valid.");
+
+          const parsedData = JSON.parse(jsonMatch[0]);
+
+          if (!parsedData.isIndonesianText) {
+            alert("Maaf, gambar tidak berisi teks atau materi dalam Bahasa Indonesia.");
+            loadingStatus.classList.add('hidden');
+            return;
+          }
+
+          // 1. Save Summary to Library
+          const newSummary = {
+            id: Date.now(),
+            title: parsedData.topicTitle || "Topik Pelajaran Baru",
+            summary: parsedData.summary,
+            date: new Date().toLocaleDateString('id-ID')
+          };
+          summaryLibrary.unshift(newSummary);
+          localStorage.setItem('summaryLibrary', JSON.stringify(summaryLibrary));
+          renderSummaryLibrary();
+          selectSummaryTopic(newSummary.id);
+
+          // 2. Save Quiz to Library
+          if (parsedData.quiz && parsedData.quiz.length > 0) {
+            const newQuiz = {
+              id: Date.now(),
+              topicId: newSummary.id,
+              title: `Kuis: ${newSummary.title}`,
+              questions: parsedData.quiz
+            };
+            quizLibrary.unshift(newQuiz);
+            localStorage.setItem('quizLibrary', JSON.stringify(quizLibrary));
+            renderQuizDropdown();
+            loadQuiz(newQuiz.id);
+          }
 
           loadingStatus.classList.add('hidden');
-          resultsSection.classList.remove('hidden');
-
-          summaryContent.innerHTML = teksHasil
-            .replace(/\n\n/g, '<br><br>')
-            .replace(/\n/g, '<br>')
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-          resultsSection.scrollIntoView({ behavior: 'smooth' });
           berhasil = true;
           break;
 
         } catch (err) {
           errorTerakhir = terjemahkanPesanError(err.message);
-          console.warn(`Kesalahan pada model ${namaModel}:`, err);
+          console.warn(`Galat pada model ${namaModel}:`, err);
         }
       }
 
@@ -232,6 +367,148 @@ ATURAN UTAMA PARSER:
         loadingStatus.classList.add('hidden');
         alert(`Gagal memproses gambar:\n${errorTerakhir}`);
       }
+    });
+
+    // --- 1. TOPIC & SUMMARY LIBRARY LOGIC ---
+    function renderSummaryLibrary() {
+      topicList.innerHTML = "";
+      if (summaryLibrary.length === 0) {
+        topicList.innerHTML = `<p class="text-xs text-slate-400 italic">Belum ada topik tersimpan.</p>`;
+        return;
+      }
+
+      summaryLibrary.forEach((item) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-emerald-50 hover:border-emerald-300 transition text-xs font-semibold text-slate-700 flex justify-between items-center";
+        btn.innerHTML = `
+          <span class="truncate">${item.title}</span>
+          <span class="text-[10px] text-slate-400 font-normal ml-1">${item.date}</span>
+        `;
+        btn.onclick = () => selectSummaryTopic(item.id);
+        topicList.appendChild(btn);
+      });
+    }
+
+    function selectSummaryTopic(id) {
+      const item = summaryLibrary.find(s => s.id === id);
+      if (!item) return;
+
+      activeTopicTitle.innerText = item.title;
+      activeSummaryContent.innerHTML = item.summary
+        .replace(/\n\n/g, '<br><br>')
+        .replace(/\n/g, '<br>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    }
+
+    // --- 2 & 3. QUIZ LIBRARY & EXERCISE LOGIC ---
+    function renderQuizDropdown() {
+      quizSelect.innerHTML = `<option value="">-- Pilih Kuis --</option>`;
+      quizLibrary.forEach((q) => {
+        const opt = document.createElement('option');
+        opt.value = q.id;
+        opt.textContent = q.title;
+        quizSelect.appendChild(opt);
+      });
+    }
+
+    quizSelect.addEventListener('change', (e) => {
+      const selectedId = Number(e.target.value);
+      if (selectedId) loadQuiz(selectedId);
+    });
+
+    function loadQuiz(quizId) {
+      activeQuiz = quizLibrary.find(q => q.id === quizId);
+      if (!activeQuiz) return;
+
+      currentQuestionIdx = 0;
+      userAnswers = [];
+
+      quizSummary.classList.add('hidden');
+      quizContainer.classList.remove('hidden');
+      quizTitle.innerText = activeQuiz.title;
+
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      quizFeedback.classList.add('hidden');
+      optionsContainer.innerHTML = "";
+
+      const q = activeQuiz.questions[currentQuestionIdx];
+      questionTracker.innerText = `Soal ${currentQuestionIdx + 1} dari ${activeQuiz.questions.length}`;
+      questionText.innerText = q.question;
+
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 bg-white hover:bg-amber-50 hover:border-amber-300 text-xs font-semibold text-slate-700 transition";
+        btn.innerText = optText;
+        btn.onclick = () => handleAnswerSelect(idx, btn);
+        optionsContainer.appendChild(btn);
+      });
+
+      nextQBtn.innerText = (currentQuestionIdx === activeQuiz.questions.length - 1) ? "Lihat Hasil 🏁" : "Pertanyaan Berikutnya ➔";
+    }
+
+    function handleAnswerSelect(selectedIdx, selectedBtn) {
+      const q = activeQuiz.questions[currentQuestionIdx];
+      const isCorrect = (selectedIdx === q.answerIndex);
+
+      userAnswers[currentQuestionIdx] = isCorrect;
+
+      // Lock buttons
+      const buttons = optionsContainer.querySelectorAll('button');
+      buttons.forEach(b => b.disabled = true);
+
+      if (isCorrect) {
+        selectedBtn.className = "w-full text-left p-3 rounded-xl border-2 border-emerald-500 bg-emerald-100 text-emerald-900 text-xs font-bold";
+        quizFeedback.className = "p-3 rounded-xl text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300";
+        quizFeedback.innerHTML = `<strong>Benar! 🎉</strong> ${q.explanation}`;
+      } else {
+        selectedBtn.className = "w-full text-left p-3 rounded-xl border-2 border-rose-500 bg-rose-100 text-rose-900 text-xs font-bold";
+        buttons[q.answerIndex].className = "w-full text-left p-3 rounded-xl border-2 border-emerald-500 bg-emerald-100 text-emerald-900 text-xs font-bold";
+        quizFeedback.className = "p-3 rounded-xl text-xs font-semibold bg-rose-100 text-rose-800 border border-rose-300";
+        quizFeedback.innerHTML = `<strong>Kurang Tepat. 💡</strong> ${q.explanation}`;
+      }
+
+      quizFeedback.classList.remove('hidden');
+    }
+
+    nextQBtn.addEventListener('click', () => {
+      if (userAnswers[currentQuestionIdx] === undefined) {
+        alert("Silakan pilih jawaban terlebih dahulu!");
+        return;
+      }
+
+      if (currentQuestionIdx < activeQuiz.questions.length - 1) {
+        currentQuestionIdx++;
+        renderQuestion();
+      } else {
+        showQuizSummary();
+      }
+    });
+
+    // 3. Exercise Summary Function
+    function showQuizSummary() {
+      quizContainer.classList.add('hidden');
+      quizSummary.classList.remove('hidden');
+
+      const total = activeQuiz.questions.length;
+      const correctCount = userAnswers.filter(Boolean).length;
+      const score = Math.round((correctCount / total) * 100);
+
+      quizScoreText.innerText = `Nilai: ${score} / 100`;
+
+      if (score === 100) {
+        quizEvalText.innerText = "Luar biasa! Anak telah memahami seluruh materi ini dengan sangat baik.";
+      } else if (score >= 60) {
+        quizEvalText.innerText = "Bagus sekali! Anak sudah memahami sebagian besar materi. Tetap semangat belajar!";
+      } else {
+        quizEvalText.innerText = "Yuk baca kembali ringkasan materi di atas dan coba latihan soal ini sekali lagi!";
+      }
+    }
+
+    retryQuizBtn.addEventListener('click', () => {
+      if (activeQuiz) loadQuiz(activeQuiz.id);
     });
   </script>
 </body>
