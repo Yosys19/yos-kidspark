@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yos KidSpark Learn v.14 - Pemindai Buku Bahasa Indonesia</title>
+  <title>Yos KidSpark Learn v.15 - Pemindai Buku Bahasa Indonesia</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -145,9 +145,10 @@
 
       loadingStatus.classList.remove('hidden');
 
+      // Model aktif resmi dari Google Gemini API
       const daftarModel = [
-        'gemini-2.5-flash',
-        'gemini-2.5-flash-lite'
+        'gemini-3.5-flash-lite',
+        'gemini-3.8-flash'
       ];
 
       // Instruksi Parser Engine Khusus Bahasa Indonesia + Bebas Format LaTeX
@@ -173,7 +174,7 @@ ATURAN UTAMA PARSER:
         const namaModel = daftarModel[i];
         const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${namaModel}:generateContent?key=${apiKey}`;
 
-        loadingText.innerText = `Memproses gambar dengan parser Bahasa Indonesia...`;
+        loadingText.innerText = `Memproses gambar dengan parser Bahasa Indonesia (${namaModel})...`;
 
         try {
           const response = await fetch(endpoint, {
@@ -206,7 +207,7 @@ ATURAN UTAMA PARSER:
           // Pemrosesan Berhasil
           let teksHasil = data.candidates[0].content.parts[0].text;
           
-          // Bersihkan teks dari simbol-simbol LaTeX secara komprehensif
+          // Bersihkan teks dari simbol-simbol LaTeX
           teksHasil = bersihkanFormatMatematika(teksHasil);
 
           loadingStatus.classList.add('hidden');
